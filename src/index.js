@@ -35,6 +35,7 @@ function verifyInitData(initData) {
 }
 
 const app = express();
+app.use(require('compression')());   // JS/CSS/JSON gzip bilan siqiladi
 app.use(express.json({ limit: '1mb' }));
 
 app.use('/api', (req, res, next) => {
@@ -261,8 +262,14 @@ app.delete('/api/owner/cards/:id', ownerOnly, (req, res) => {
 });
 
 // ---------- Statik fayllar ----------
-app.use('/uploads', express.static(db.UPLOAD_DIR, { maxAge: '30d' }));
-app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: 0 }));
+app.use('/uploads', express.static(db.UPLOAD_DIR, { maxAge: '365d', immutable: true }));
+// index.html har doim yangi; css/js (?v= versiya bilan) va rasmlar brauzerda saqlanadi
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+  setHeaders(res, file) {
+    if (file.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache');
+    else res.setHeader('Cache-Control', 'public, max-age=604800');
+  },
+}));
 app.get('/health', (req, res) => res.send('ok'));
 
 // ---------- Ishga tushirish ----------

@@ -39,6 +39,19 @@
   const img0 = (p) => p.images?.[0] || 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#ece2fa"/><text x="5" y="6.8" font-size="5" text-anchor="middle">🛍</text></svg>`);
 
   // ---------- API ----------
+  // Rasmni yuklashdan oldin kichraytiramiz (telefon fotosi 5 MB -> ~150 KB): ilova ancha tez ochiladi
+  async function shrinkImage(f, max = 1200, q = 0.82) {
+    try {
+      if (!/^image\/(jpeg|png|webp|heic|heif)/i.test(f.type) && !/\.(jpe?g|png|webp|heic)$/i.test(f.name)) return f;
+      const bmp = await createImageBitmap(f);
+      const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(bmp, 0, 0, c.width, c.height);
+      const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', q));
+      return blob && blob.size < f.size ? blob : f;
+    } catch { return f; }
+  }
   async function api(path, opts = {}) {
     const headers = { 'X-Init-Data': tg?.initData || '' };
     let body = opts.body;
@@ -135,7 +148,7 @@
     const q = QUALITY[p.quality];
     const out = p.stock === 0;
     return `<article class="card" style="animation-delay:${Math.min(i, 10) * 40}ms" data-act="open" data-id="${p.id}">
-      <div class="ph"><img loading="lazy" src="${h(img0(p))}" alt="">
+      <div class="ph"><img loading="lazy" decoding="async" src="${h(img0(p))}" alt="">
         <div class="badges">${sale ? `<span class="badge sale">−${sale}%</span>` : ''}${q ? `<span class="badge q-${p.quality}">${q.icon} ${q.label}</span>` : ''}${out ? '<span class="badge off">Tugagan</span>' : ''}${p.active === false ? '<span class="badge off">Yashirin</span>' : ''}</div>
         <button class="heart ${favs.has(p.id) ? 'on' : ''}" data-act="fav" data-id="${p.id}">${favs.has(p.id) ? '❤️' : '🤍'}</button>
       </div>
@@ -437,8 +450,8 @@
     const file = $('#file');
     if (file) file.onchange = async () => {
       if (!file.files[0]) return;
-      const fd = new FormData(); fd.append('file', file.files[0]);
       toast('Yuklanmoqda…');
+      const fd = new FormData(); fd.append('file', await shrinkImage(file.files[0]), 'photo.jpg');
       try { const r = await api('/api/admin/upload', { method: 'POST', body: fd }); form._images.push(r.url); renderImgs(); toast('Rasm qo\'shildi ✅'); } catch (e) { toast(e.message); }
     };
   }
