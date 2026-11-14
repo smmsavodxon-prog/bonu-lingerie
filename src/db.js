@@ -12,12 +12,12 @@ const uid = () => crypto.randomBytes(6).toString('hex');
 
 function seed() {
   const cats = [
-    { id: uid(), name: 'Lifchiklar', emoji: '🎀', color: '#d9a3a0' },
-    { id: uid(), name: 'Trusiklar', emoji: '🌸', color: '#c9a27e' },
-    { id: uid(), name: 'To\'plamlar', emoji: '💝', color: '#a8714f' },
-    { id: uid(), name: 'Pijama va xalatlar', emoji: '🌙', color: '#9d8fc0' },
-    { id: uid(), name: 'Bodi va korsetlar', emoji: '✨', color: '#d4b48c' },
-    { id: uid(), name: 'Kolgotka va paypoqlar', emoji: '🧦', color: '#8e9a82' },
+    { id: uid(), name: 'Lifchiklar', emoji: '🎀', color: '#c084fc' },
+    { id: uid(), name: 'Trusiklar', emoji: '🌸', color: '#fb9a7a' },
+    { id: uid(), name: 'To\'plamlar', emoji: '💝', color: '#f28fb8' },
+    { id: uid(), name: 'Pijama va xalatlar', emoji: '🌙', color: '#60a5fa' },
+    { id: uid(), name: 'Bodi va korsetlar', emoji: '✨', color: '#f6b93b' },
+    { id: uid(), name: 'Kolgotka va paypoqlar', emoji: '🧦', color: '#34c3a0' },
   ];
   // Namuna rasmlar — admin paneldan haqiqiy rasmlarga almashtiriladi
   const ph = (n) => `/img/sample-${n}.svg`;
@@ -31,8 +31,8 @@ function seed() {
       shopName: 'Bonu Lingerie',
       tagline: 'Nafislik — har kuni siz bilan',
       currency: "so'm",
-      accent: '#1c1714',
-      accent2: '#b8936b',
+      accent: '#9b6bc4',
+      accent2: '#f5a48a',
       phone: '',
       welcomeText: '🌸 <b>Bonu Lingerie</b>ga xush kelibsiz!\n\nNafis ichki kiyimlar, pijamalar va sovg\'a to\'plamlari. Buyurtmalar yashirin qadoqda yetkaziladi.\n\nDo\'konni ochish uchun pastdagi tugmani bosing 👇',
       orderNote: 'Buyurtmangiz qabul qilindi! Tez orada operatorimiz siz bilan bog\'lanadi. Mahsulot yashirin qadoqda yetkaziladi. 💝',
@@ -54,9 +54,9 @@ function seed() {
       p('Kolgotka 40 den (2 dona)', 5, 49000, null, 'standart', 'Italiya', 12, 'Mat, cho\'zilmaydigan, chidamli.'),
     ],
     banners: [
-      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#efe6dc', to: '#dccbb9', action: 'sort:new' },
-      { id: uid(), title: 'Mavsum chegirmalari', subtitle: '30% gacha', emoji: '💝', from: '#2a2420', to: '#54463c', action: 'filter:sale' },
-      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningiz uchun nafis sovg\'a', emoji: '🎁', from: '#ece6ee', to: '#d8cdd9', action: 'filter:premium' },
+      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#9b6bc4', to: '#f5a48a', action: 'sort:new' },
+      { id: uid(), title: 'Chegirmalar', subtitle: '30% gacha arzon', emoji: '💝', from: '#34c3a0', to: '#60a5fa', action: 'filter:sale' },
+      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningizga eng nafis sovg\'a', emoji: '🎁', from: '#f6b93b', to: '#f28fb8', action: 'filter:premium' },
     ],
     appButtons: [
       { id: uid(), label: 'Chegirmalar', emoji: '🔥', action: 'filter:sale' },
@@ -81,6 +81,25 @@ try {
   data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 } catch {
   data = seed();
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+}
+
+// Dizayn yangilanishi: eski standart ranglarni yangi palitraga almashtiramiz
+// (ega o'zi tanlagan rang bo'lsa, tegmaymiz)
+if ((data.settings.designVersion || 0) < 4) {
+  const fresh = seed();
+  const OLD_ACCENTS = ['#b83b5e', '#a8714f', '#1c1714', '#ff3d7f'];
+  if (OLD_ACCENTS.includes(String(data.settings.accent).toLowerCase())) {
+    data.settings.accent = fresh.settings.accent;
+    data.settings.accent2 = fresh.settings.accent2;
+  }
+  const fc = Object.fromEntries(fresh.categories.map((x) => [x.name, x]));
+  for (const c of data.categories || []) if (fc[c.name]) c.color = fc[c.name].color;
+  (data.banners || []).forEach((b, i) => {
+    const f = fresh.banners.find((x) => x.action === b.action) || fresh.banners[i];
+    if (f && !b.image) { b.from = f.from; b.to = f.to; b.title = f.title; b.subtitle = f.subtitle; b.emoji = b.emoji || f.emoji; }
+  });
+  data.settings.designVersion = 4;
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
 

@@ -156,10 +156,10 @@ const SCHEMAS = {
     country: str(b.country, 60), stock: num(b.stock), active: b.active !== false,
     images: (Array.isArray(b.images) ? b.images : []).map((x) => str(x, 500)).filter(Boolean).slice(0, 8),
   }),
-  categories: (b) => ({ name: str(b.name, 60), emoji: str(b.emoji, 8) || '🛍', color: str(b.color, 20) || '#a8714f' }),
+  categories: (b) => ({ name: str(b.name, 60), emoji: str(b.emoji, 8) || '🛍', color: str(b.color, 20) || '#9b6bc4' }),
   banners: (b) => ({
     title: str(b.title, 80), subtitle: str(b.subtitle, 120), emoji: str(b.emoji, 8), image: str(b.image, 500),
-    from: str(b.from, 20) || '#a8714f', to: str(b.to, 20) || '#a8714f', action: str(b.action, 200),
+    from: str(b.from, 20) || '#9b6bc4', to: str(b.to, 20) || '#9b6bc4', action: str(b.action, 200),
   }),
   appButtons: (b) => ({ label: str(b.label, 30), emoji: str(b.emoji, 8), action: str(b.action, 200) }),
   botButtons: (b) => ({
