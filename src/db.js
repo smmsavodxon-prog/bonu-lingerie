@@ -73,6 +73,7 @@ function seed() {
     ],
     orders: [],
     users: {},
+    cards: [],
   };
 }
 
@@ -83,6 +84,7 @@ try {
   data = seed();
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
+if (!Array.isArray(data.cards)) data.cards = [];   // to'lov kartalari (ega qo'shadi)
 
 // Dizayn yangilanishi: eski standart ranglarni yangi palitraga almashtiramiz
 // (ega o'zi tanlagan rang bo'lsa, tegmaymiz)

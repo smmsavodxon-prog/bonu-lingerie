@@ -60,6 +60,7 @@ app.get('/api/bootstrap', (req, res) => {
     products: admin ? d.products : d.products.filter((p) => p.active),
     banners: d.banners,
     appButtons: d.appButtons,
+    cards: d.cards.map(({ id, number, holder, bank }) => ({ id, number, holder, bank })),
     ...(admin && { botButtons: d.botButtons }),
     ...(req.role === 'owner' && { admins: d.admins }),
   });
@@ -241,6 +242,22 @@ app.delete('/api/owner/admins/:id', ownerOnly, (req, res) => {
   db.save();
   if (botApi) botApi.notifyAdminChange(id, false).catch(() => {});
   res.json(db.data.admins);
+});
+
+// ---------- Ega API: to'lov kartalari ----------
+const cardDigits = (v) => String(v || '').replace(/\D/g, '');
+app.post('/api/owner/cards', ownerOnly, (req, res) => {
+  const number = cardDigits(req.body.number);
+  if (number.length !== 16) return res.status(400).json({ error: 'Karta raqami 16 ta raqamdan iborat bo\'lishi kerak' });
+  if (db.data.cards.length >= 5) return res.status(400).json({ error: 'Ko\'pi bilan 5 ta karta qo\'shish mumkin' });
+  db.data.cards.push({ id: db.uid(), number, holder: str(req.body.holder, 60), bank: str(req.body.bank, 40), addedAt: Date.now() });
+  db.save();
+  res.json(db.data.cards);
+});
+app.delete('/api/owner/cards/:id', ownerOnly, (req, res) => {
+  db.data.cards = db.data.cards.filter((c) => c.id !== req.params.id);
+  db.save();
+  res.json(db.data.cards);
 });
 
 // ---------- Statik fayllar ----------

@@ -258,7 +258,7 @@
     if (!isAdmin()) return emptyHTML('🔒', 'Ruxsat yo\'q', 'Bu bo\'lim faqat adminlar uchun');
     if (sub) return adminSub(sub);
     const st = await api('/api/admin/stats');
-    const tiles = [...ADMIN_TILES, ...(isOwner() ? [['admins', '👑', 'Adminlar', '#eab308']] : [])];
+    const tiles = [...ADMIN_TILES, ...(isOwner() ? [['admins', '👑', 'Adminlar', '#eab308'], ['cards', '💳', 'Kartalar', '#34c3a0']] : [])];
     return `<div class="admin-hero"><small>${isOwner() ? '👑 Do\'kon egasi' : '🛡 Admin'}</small><h1>Salom, ${h(D.me.name)}!</h1></div>
     <div class="stats">
       <div class="stat"><small>Daromad</small><b>${money(st.revenue)}</b></div>
@@ -293,6 +293,19 @@
       return `${back}<div class="page-title"><h1>Buyurtmalar</h1></div>${list.length ? list.map((o) => orderHTML(o, true)).join('') : emptyHTML('🧾', 'Buyurtmalar yo\'q', 'Hali hech kim buyurtma bermadi')}`;
     }
     if (sub === 'settings') return back + settingsHTML();
+    if (sub === 'cards') {
+      if (!isOwner()) return emptyHTML('🔒', 'Faqat ega uchun', '');
+      const cards = D.cards || [];
+      return `${back}<div class="page-title"><h1>Kartalar</h1></div>
+      <p class="hint">Mijoz buyurtma berganda shu kartalar ko'rinadi — u pulni o'tkazib, chekni botga yuboradi. Chek sizga va adminlarga keladi.</p>
+      ${cards.map((c) => `<div class="pay-card"><div><small>${h(c.bank || 'Karta')}</small><b>${fmtCard(c.number)}</b><span>${h(c.holder || '')}</span></div>
+        <button class="mini del" data-act="rm-card" data-id="${c.id}">🗑</button></div>`).join('') || '<p class="hint">Hozircha karta yo\'q.</p>'}
+      ${cards.length < 5 ? `<div class="section-title"><h2>Yangi karta</h2></div>
+      <div class="field"><label>Karta raqami</label><input class="input" id="card-number" inputmode="numeric" maxlength="19" placeholder="8600 1234 5678 9012"></div>
+      <div class="field"><label>Karta egasi</label><input class="input" id="card-holder" placeholder="Ism Familiya"></div>
+      <div class="field"><label>Bank / turi (ixtiyoriy)</label><input class="input" id="card-bank" placeholder="Uzcard, Humo, Kapitalbank…"></div>
+      <button class="btn primary" data-act="add-card">💳 Kartani qo'shish</button>` : '<p class="hint">Ko\'pi bilan 5 ta karta.</p>'}`;
+    }
     if (sub === 'admins') {
       if (!isOwner()) return emptyHTML('🔒', 'Faqat ega uchun', '');
       const users = await api('/api/owner/users');
@@ -524,9 +537,18 @@
       <button class="btn primary" type="submit">${payLabel()}</button></form>`);
   }
 
+  const fmtCard = (n) => String(n || '').replace(/(\d{4})(?=\d)/g, '$1 ');
+  function payCardsHTML(total) {
+    const cards = D.cards || [];
+    if (!cards.length) return '';
+    return `<div class="pay-box"><b>💳 To'lov uchun${total ? ' · ' + money(total) : ''}</b>
+      ${cards.map((c) => `<div class="pay-card"><div><small>${h(c.bank || 'Karta')}</small><b>${fmtCard(c.number)}</b><span>${h(c.holder || '')}</span></div>
+        <button class="chip" data-act="copy" data-v="${h(c.number)}">Nusxa</button></div>`).join('')}
+      <p class="hint" style="margin:6px 2px 0">Pulni o'tkazgach, chek rasmini botga yuboring — operator tasdiqlaydi.</p></div>`;
+  }
   function celebrate(order) {
     openSheet(`<div class="empty" style="padding:30px 0"><div class="big">🎉</div><h3>Buyurtma #${order.no} qabul qilindi!</h3>
-      <p>${h(D.settings.orderNote)}</p><br><button class="btn primary" data-act="close-go" data-to="orders">📦 Buyurtmalarim</button></div>`);
+      <p>${h(D.settings.orderNote)}</p>${order.paid ? '' : payCardsHTML(order.total)}<br><button class="btn primary" data-act="close-go" data-to="orders">📦 Buyurtmalarim</button></div>`);
     confetti();
   }
   function confetti() {
@@ -720,6 +742,24 @@
       case 'add-admin': case 'make-admin': {
         const uid = act === 'add-admin' ? $('#new-admin').value.trim() : id;
         try { D.admins = await api('/api/owner/admins', { method: 'POST', body: { id: uid, name: el.dataset.name } }); notify(); toast('Admin tayinlandi 🛡'); render(true); } catch (er) { toast(er.message); }
+        return;
+      }
+      case 'copy': {
+        const v = el.dataset.v;
+        try { await navigator.clipboard.writeText(v); } catch { const t = document.createElement('textarea'); t.value = v; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+        notify(); toast('Karta raqami nusxalandi ✅');
+        return;
+      }
+      case 'add-card': {
+        try {
+          D.cards = await api('/api/owner/cards', { method: 'POST', body: { number: $('#card-number').value, holder: $('#card-holder').value, bank: $('#card-bank').value } });
+          notify(); toast('Karta qo\'shildi 💳'); render(true);
+        } catch (er) { notify('error'); toast(er.message); }
+        return;
+      }
+      case 'rm-card': {
+        if (!(await confirmBox('Karta o\'chirilsinmi?'))) return;
+        try { D.cards = await api(`/api/owner/cards/${id}`, { method: 'DELETE' }); toast('O\'chirildi'); render(true); } catch (er) { toast(er.message); }
         return;
       }
       case 'rm-admin': {
