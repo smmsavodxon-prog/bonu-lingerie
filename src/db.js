@@ -31,8 +31,8 @@ function seed() {
       shopName: 'Bonu Lingerie',
       tagline: 'Nafislik — har kuni siz bilan',
       currency: "so'm",
-      accent: '#a8714f',
-      accent2: '#e3bfb3',
+      accent: '#1c1714',
+      accent2: '#b8936b',
       phone: '',
       welcomeText: '🌸 <b>Bonu Lingerie</b>ga xush kelibsiz!\n\nNafis ichki kiyimlar, pijamalar va sovg\'a to\'plamlari. Buyurtmalar yashirin qadoqda yetkaziladi.\n\nDo\'konni ochish uchun pastdagi tugmani bosing 👇',
       orderNote: 'Buyurtmangiz qabul qilindi! Tez orada operatorimiz siz bilan bog\'lanadi. Mahsulot yashirin qadoqda yetkaziladi. 💝',
@@ -54,9 +54,9 @@ function seed() {
       p('Kolgotka 40 den (2 dona)', 5, 49000, null, 'standart', 'Italiya', 12, 'Mat, cho\'zilmaydigan, chidamli.'),
     ],
     banners: [
-      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#a8714f', to: '#e3bfb3', action: 'sort:new' },
-      { id: uid(), title: 'Chegirmalar', subtitle: '30% gacha arzon', emoji: '💝', from: '#c98f86', to: '#f1d3b3', action: 'filter:sale' },
-      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningizga eng nafis sovg\'a', emoji: '🎁', from: '#8f80b8', to: '#e6cfc4', action: 'filter:premium' },
+      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#efe6dc', to: '#dccbb9', action: 'sort:new' },
+      { id: uid(), title: 'Mavsum chegirmalari', subtitle: '30% gacha', emoji: '💝', from: '#2a2420', to: '#54463c', action: 'filter:sale' },
+      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningiz uchun nafis sovg\'a', emoji: '🎁', from: '#ece6ee', to: '#d8cdd9', action: 'filter:premium' },
     ],
     appButtons: [
       { id: uid(), label: 'Chegirmalar', emoji: '🔥', action: 'filter:sale' },

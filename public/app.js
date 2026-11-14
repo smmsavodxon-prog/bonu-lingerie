@@ -10,18 +10,32 @@
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
   };
 
+
+  const ICON = {
+    search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    filter: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
+    bag: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+    heart: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>',
+    heartOn: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>',
+    home: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4v-9.5Z"/></svg>',
+    grid: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>',
+    box: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 7.5 12 4l8 3.5v9L12 20l-8-3.5v-9Z"/><path d="m4 7.5 8 3.5 8-3.5M12 11v9"/></svg>',
+    gear: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></svg>',
+  };
+  const lightBg = (hex) => { const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '')); if (!m) return false; const n = parseInt(m[1], 16); return ((n >> 16) * .299 + ((n >> 8) & 255) * .587 + (n & 255) * .114) / 255 > .62; };
+
   const QUALITY = {
-    premium: { label: 'Premium', icon: '💎' },
-    yuqori: { label: 'Yuqori', icon: '⭐' },
-    standart: { label: 'Standart', icon: '👍' },
-    ekonom: { label: 'Ekonom', icon: '💰' },
+    premium: { label: 'Premium', icon: '' },
+    yuqori: { label: 'Yuqori', icon: '' },
+    standart: { label: 'Standart', icon: '' },
+    ekonom: { label: 'Ekonom', icon: '' },
   };
   const FLAGS = {
     "o'zbekiston": '🇺🇿', 'uzbekistan': '🇺🇿', 'turkiya': '🇹🇷', 'xitoy': '🇨🇳', 'janubiy koreya': '🇰🇷', 'koreya': '🇰🇷',
     'rossiya': '🇷🇺', 'germaniya': '🇩🇪', 'italiya': '🇮🇹', 'aqsh': '🇺🇸', 'yaponiya': '🇯🇵', 'baa': '🇦🇪', 'hindiston': '🇮🇳',
     'fransiya': '🇫🇷', 'polsha': '🇵🇱', "qozog'iston": '🇰🇿', 'eron': '🇮🇷', 'buyuk britaniya': '🇬🇧', 'ispaniya': '🇪🇸', 'vetnam': '🇻🇳',
   };
-  const flag = (c) => FLAGS[String(c || '').toLowerCase().replace(/[‘’ʻʼ`]/g, "'")] || '🌍';
+  const flag = (c) => '' || FLAGS[String(c || '').toLowerCase().replace(/[‘’ʻʼ`]/g, "'")] || '';
   const STATUS = { new: '🆕 Yangi', accepted: '✅ Qabul qilindi', shipping: '🚚 Yo\'lda', done: '🎉 Yetkazildi', cancelled: '❌ Bekor' };
 
   let D = null; // server ma'lumotlari
@@ -69,8 +83,8 @@
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
     const s = D?.settings;
     if (s) {
-      document.documentElement.style.setProperty('--accent', s.accent || '#a8714f');
-      document.documentElement.style.setProperty('--accent2', s.accent2 || '#e3bfb3');
+      document.documentElement.style.setProperty('--accent', s.accent || '#1c1714');
+      document.documentElement.style.setProperty('--accent2', s.accent2 || '#b8936b');
       document.title = s.shopName;
     }
     try {
@@ -132,19 +146,19 @@
   function cardHTML(p, i = 0) {
     const qty = cart[p.id] || 0;
     const sale = p.oldPrice && p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
-    const q = QUALITY[p.quality];
     const out = p.stock === 0;
+    const cat = catById(p.categoryId);
     return `<article class="card" style="animation-delay:${Math.min(i, 10) * 40}ms" data-act="open" data-id="${p.id}">
       <div class="ph"><img loading="lazy" src="${h(img0(p))}" alt="">
-        <div class="badges">${sale ? `<span class="badge sale">−${sale}%</span>` : ''}${q ? `<span class="badge q-${p.quality}">${q.icon} ${q.label}</span>` : ''}${out ? '<span class="badge off">Tugagan</span>' : ''}${p.active === false ? '<span class="badge off">Yashirin</span>' : ''}</div>
-        <button class="heart ${favs.has(p.id) ? 'on' : ''}" data-act="fav" data-id="${p.id}">${favs.has(p.id) ? '❤️' : '🤍'}</button>
+        <div class="badges">${sale ? `<span class="badge sale">−${sale}%</span>` : ''}${p.quality === 'premium' && !sale ? '<span class="badge">Premium</span>' : ''}${out ? '<span class="badge off">Tugagan</span>' : ''}${p.active === false ? '<span class="badge off">Yashirin</span>' : ''}</div>
+        <button class="heart ${favs.has(p.id) ? 'on' : ''}" data-act="fav" data-id="${p.id}" aria-label="Sevimli">${favs.has(p.id) ? ICON.heartOn : ICON.heart}</button>
+        ${out ? '' : qty ? `<div class="stepper"><button data-act="dec" data-id="${p.id}">−</button><span>${qty}</span><button data-act="inc" data-id="${p.id}">+</button></div>`
+          : `<button class="add" data-act="inc" data-id="${p.id}" aria-label="Savatga">${ICON.bag}</button>`}
       </div>
       <div class="body">
-        <div class="meta">${flag(p.country)} ${h(p.country || '')}</div>
+        ${cat ? `<div class="meta">${h(cat.name)}</div>` : ''}
         <div class="title">${h(p.title)}</div>
         <div class="price"><b>${money(p.price)}</b>${sale ? `<s>${money(p.oldPrice)}</s>` : ''}</div>
-        ${out ? '' : qty ? `<div class="stepper"><button data-act="dec" data-id="${p.id}">−</button><span>${qty}</span><button data-act="inc" data-id="${p.id}">+</button></div>`
-          : `<button class="add" data-act="inc" data-id="${p.id}">🛒 Savatga</button>`}
         ${isAdmin() ? adminBar(p) : ''}
       </div></article>`;
   }
@@ -166,34 +180,33 @@
     const list = filtered();
     const f = anyFilter();
     const activeChips = [];
-    if (F.cat) activeChips.push(`<button class="chip x" data-act="rm" data-k="cat">${h(catById(F.cat)?.emoji)} ${h(catById(F.cat)?.name)} ✕</button>`);
+    if (F.cat) activeChips.push(`<button class="chip x" data-act="rm" data-k="cat">${h(catById(F.cat)?.name)} ✕</button>`);
     F.qualities.forEach((q) => activeChips.push(`<button class="chip x" data-act="rm" data-k="q" data-v="${q}">${QUALITY[q]?.icon} ${QUALITY[q]?.label} ✕</button>`));
     F.countries.forEach((c) => activeChips.push(`<button class="chip x" data-act="rm" data-k="c" data-v="${h(c)}">${flag(c)} ${h(c)} ✕</button>`));
-    if (F.sale) activeChips.push('<button class="chip x" data-act="rm" data-k="sale">🔥 Chegirma ✕</button>');
-    if (F.min != null || F.max != null) activeChips.push(`<button class="chip x" data-act="rm" data-k="price">💸 ${F.min != null ? money(F.min) : '0'} – ${F.max != null ? money(F.max) : '∞'} ✕</button>`);
+    if (F.sale) activeChips.push('<button class="chip x" data-act="rm" data-k="sale">Chegirma ✕</button>');
+    if (F.min != null || F.max != null) activeChips.push(`<button class="chip x" data-act="rm" data-k="price">${F.min != null ? money(F.min) : '0'} – ${F.max != null ? money(F.max) : '∞'} ✕</button>`);
 
     return `
     <header class="hero">
-      <div class="logo">${h((s.shopName || 'S')[0])}</div>
-      <div><h1>${h(s.shopName)}</h1><p>${h(s.tagline)}</p></div>
-      <div class="spacer"></div>
-      <button class="icon-btn" data-act="go" data-to="orders">📦</button>
+      <button class="icon-btn" data-act="go" data-to="orders" aria-label="Buyurtmalarim">${ICON.box}</button>
+      <div class="brand"><h1>${h(String(s.shopName || '').split(' ')[0])}</h1><span>${h(String(s.shopName || '').split(' ').slice(1).join(' '))}</span></div>
+      <button class="icon-btn" data-act="go" data-to="cart" aria-label="Savat">${ICON.bag}${cartCount() ? `<span class="dot">${cartCount()}</span>` : ''}</button>
     </header>
+    <p class="tagline">${h(s.tagline)}</p>
     ${isAdmin() ? `<div class="owner-strip"><span>${isOwner() ? '👑 Ega rejimi' : '🛡 Admin rejimi'}: mahsulotlarni shu yerning o'zida tahrirlang</span><button data-act="go" data-to="admin">Panel →</button></div>` : ''}
     <div class="search" id="searchbar">
-      <label class="search-box">🔍<input id="q" type="search" placeholder="Mahsulot qidirish…" value="${h(F.q)}" enterkeyhint="search"></label>
-      <button class="filter-btn" data-act="filters">⚙️${filterCount() ? `<span class="dot">${filterCount()}</span>` : ''}</button>
+      <label class="search-box">${ICON.search}<input id="q" type="search" placeholder="Mahsulot qidirish…" value="${h(F.q)}" enterkeyhint="search"></label>
+      <button class="filter-btn" data-act="filters" aria-label="Filtr">${ICON.filter}${filterCount() ? `<span class="dot">${filterCount()}</span>` : ''}</button>
     </div>
     ${!f && D.banners.length ? `<div class="banners" id="banners">${D.banners.map((b) => `
-      <button class="banner" data-act="action" data-a="${h(b.action)}" style="background:${b.image ? `linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,.05)),url('${h(b.image)}') center/cover` : `linear-gradient(135deg,${h(b.from)},${h(b.to)})`}">
-        ${b.emoji ? `<span class="emo">${h(b.emoji)}</span>` : ''}<h3>${h(b.title)}</h3><p>${h(b.subtitle)}</p></button>`).join('')}</div>
+      <button class="banner" data-act="action" data-a="${h(b.action)}" style="background:${b.image ? `linear-gradient(0deg,rgba(0,0,0,.5),rgba(0,0,0,0) 60%),url('${h(b.image)}') center/cover` : `linear-gradient(160deg,${h(b.from)},${h(b.to)})`};color:${!b.image && lightBg(b.from) ? '#1c1714' : '#fff'}">
+        <small>Bonu</small><h3>${h(b.title)}</h3><p>${h(b.subtitle)}</p><span class="more">Ko'rish</span></button>`).join('')}</div>
       <div class="dots" id="bdots">${D.banners.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>` : ''}
-    ${D.categories.length ? `<div class="section-title"><h2>Bo'limlar</h2><button data-act="go" data-to="catalog">Barchasi →</button></div>
-    <div class="cats">${D.categories.map((c) => `<button class="cat ${F.cat === c.id ? 'on' : ''}" style="--c:${h(c.color)}" data-act="cat" data-id="${c.id}"><span class="orb">${h(c.emoji)}</span>${h(c.name)}</button>`).join('')}</div>` : ''}
+    ${D.categories.length ? `<div class="cats"><button class="cat ${!F.cat ? 'on' : ''}" data-act="reset">Hammasi</button>${D.categories.map((c) => `<button class="cat ${F.cat === c.id ? 'on' : ''}" data-act="cat" data-id="${c.id}">${h(c.name)}</button>`).join('')}</div>` : ''}
     <div class="chips">${activeChips.length ? activeChips.join('') + '<button class="chip" data-act="reset">Tozalash</button>'
-      : D.appButtons.map((b) => `<button class="chip" data-act="action" data-a="${h(b.action)}">${h(b.emoji)} ${h(b.label)}</button>`).join('')}</div>
-    <div class="section-title" id="results"><h2>${f ? `Topildi: ${list.length}` : 'Siz uchun'}</h2>
-      <button data-act="sort">${{ default: '↕️ Saralash', cheap: '⬆️ Arzonroq', expensive: '⬇️ Qimmatroq', new: '✨ Yangi', popular: '🏆 Ommabop' }[F.sort]}</button></div>
+      : D.appButtons.map((b) => `<button class="chip" data-act="action" data-a="${h(b.action)}">${h(b.label)}</button>`).join('')}</div>
+    <div class="section-title" id="results"><h2>${f ? `Topildi: ${list.length}` : 'Yangi kolleksiya'}</h2>
+      <button data-act="sort">${{ default: 'Saralash', cheap: 'Arzonroq', expensive: 'Qimmatroq', new: 'Yangi', popular: 'Ommabop' }[F.sort]}</button></div>
     ${list.length ? `<div class="grid">${list.map(cardHTML).join('')}</div>`
       : emptyHTML('🔎', 'Hech narsa topilmadi', 'Boshqa so\'z yoki filtrni sinab ko\'ring', '<br><button class="btn ghost sm" data-act="reset" style="max-width:200px;margin:auto">Filtrlarni tozalash</button>')}`;
   }
@@ -330,7 +343,7 @@
     }).join('') || emptyHTML(cfg.icon, 'Bo\'sh', 'Yangi qo\'shing')}`;
   }
 
-  const SWATCHES = ['#a8714f', '#e3bfb3', '#c9a27e', '#d9a3a0', '#9d8fc0', '#8e9a82', '#b83b5e', '#ff3d7f', '#7b5cff', '#22d3ee', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#111827', '#a855f7'];
+  const SWATCHES = ['#1c1714', '#b8936b', '#a8714f', '#d9b8ac', '#8e9a82', '#9d8fc0', '#b83b5e', '#ff3d7f', '#7b5cff', '#22d3ee', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#111827', '#a855f7'];
   function settingsHTML() {
     const s = D.settings;
     return `<div class="page-title"><h1>Sozlamalar</h1></div>
@@ -471,14 +484,14 @@
     const cat = catById(p.categoryId);
     const q = QUALITY[p.quality];
     openSheet(`<div class="gallery">${(p.images?.length ? p.images : [img0(p)]).map((u) => `<img src="${h(u)}" alt="">`).join('')}</div>
-      <div class="pd-head"><div class="meta" style="color:var(--muted);font-weight:700;font-size:12px;margin-bottom:6px">${cat ? h(cat.emoji + ' ' + cat.name) : ''}</div>
+      <div class="pd-head"><div class="meta" style="color:var(--muted);font-weight:700;font-size:12px;margin-bottom:6px">${cat ? h(cat.name) : ''}</div>
       <h2>${h(p.title)}</h2><div class="pd-price"><b>${money(p.price)}</b>${sale ? `<s>${money(p.oldPrice)}</s> <span class="badge sale">−${Math.round((1 - p.price / p.oldPrice) * 100)}%</span>` : ''}</div></div>
-      <div class="specs"><div class="spec"><small>Sifat</small><b>${q ? q.icon + ' ' + q.label : '—'}</b></div>
-      <div class="spec"><small>Davlat</small><b>${flag(p.country)} ${h(p.country || '—')}</b></div>
-      <div class="spec"><small>Mavjud</small><b>${p.stock == null ? '✅ Bor' : p.stock > 0 ? p.stock + ' dona' : '❌ Yo\'q'}</b></div></div>
+      <div class="specs"><div class="spec"><small>Sifat</small><b>${q ? q.label : '—'}</b></div>
+      <div class="spec"><small>Davlat</small><b>${h(p.country || '—')}</b></div>
+      <div class="spec"><small>Mavjud</small><b>${p.stock == null ? 'Bor' : p.stock > 0 ? p.stock + ' dona' : 'Yo\'q'}</b></div></div>
       ${p.description ? `<div class="desc">${h(p.description)}</div><br>` : ''}
-      <div class="row"><button class="btn ghost" style="flex:0 0 54px" data-act="fav" data-id="${p.id}">${favs.has(p.id) ? '❤️' : '🤍'}</button>
-      ${p.stock === 0 ? '<button class="btn ghost" disabled>Tugagan</button>' : `<button class="btn primary" data-act="buy" data-id="${p.id}">🛒 Savatga qo'shish</button>`}</div>
+      <div class="row"><button class="btn ghost" style="flex:0 0 54px" data-act="fav" data-id="${p.id}">${favs.has(p.id) ? ICON.heartOn : ICON.heart}</button>
+      ${p.stock === 0 ? '<button class="btn ghost" disabled>Tugagan</button>' : `<button class="btn primary" data-act="buy" data-id="${p.id}">Savatga qo'shish</button>`}</div>
       ${isAdmin() ? `<br>${adminBar(p, true)}` : ''}`);
   }
 
@@ -575,8 +588,8 @@
   }
   function tabbar() {
     const r = route().split('/')[0];
-    const tabs = [['', '🏠', 'Asosiy'], ['catalog', '🗂', 'Bo\'limlar'], ['fav', '❤️', 'Sevimli'], ['cart', '🛒', 'Savat']];
-    tabs.push(isAdmin() ? ['admin', '⚙️', 'Panel'] : ['orders', '📦', 'Buyurtma']);
+    const tabs = [['', ICON.home, 'Asosiy'], ['catalog', ICON.grid, 'Bo\'limlar'], ['fav', ICON.heart, 'Sevimli'], ['cart', ICON.bag, 'Savat']];
+    tabs.push(isAdmin() ? ['admin', ICON.gear, 'Panel'] : ['orders', ICON.box, 'Buyurtma']);
     const n = cartCount();
     $('#tabbar').innerHTML = tabs.map(([k, ic, t]) => `<button class="${r === k ? 'on' : ''}" data-act="go" data-to="${k}">${ic}<span>${t}</span>${k === 'cart' && n ? `<b class="dot">${n}</b>` : ''}${k === 'fav' && favs.size ? `<b class="dot">${favs.size}</b>` : ''}</button>`).join('');
   }
@@ -642,7 +655,7 @@
       case 'buy': setQty(id, (cart[id] || 0) + 1); notify(); toast('Savatga qo\'shildi 🛒'); return closeSheet();
       case 'fav': {
         favs.has(id) ? favs.delete(id) : favs.add(id); store.set('favs', [...favs]); haptic('medium');
-        if (sheetOpen()) el.textContent = favs.has(id) ? '❤️' : '🤍';
+        if (sheetOpen()) el.innerHTML = favs.has(id) ? ICON.heartOn : ICON.heart;
         return render(true);
       }
       case 'cat': F.cat = F.cat === id ? '' : id; haptic(); if (route()) return go(''); return render(true);
