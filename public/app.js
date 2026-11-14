@@ -36,7 +36,7 @@
   const prodById = (id) => D.products.find((p) => p.id === id);
   const catById = (id) => D.categories.find((c) => c.id === id);
   const cartCount = () => Object.values(cart).reduce((a, b) => a + b, 0);
-  const img0 = (p) => p.images?.[0] || 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#f3d3da"/><text x="5" y="6.8" font-size="5" text-anchor="middle">🛍</text></svg>`);
+  const img0 = (p) => p.images?.[0] || 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#efe0d4"/><text x="5" y="6.8" font-size="5" text-anchor="middle">🛍</text></svg>`);
 
   // ---------- API ----------
   async function api(path, opts = {}) {
@@ -69,8 +69,8 @@
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
     const s = D?.settings;
     if (s) {
-      document.documentElement.style.setProperty('--accent', s.accent || '#b83b5e');
-      document.documentElement.style.setProperty('--accent2', s.accent2 || '#e8a0a8');
+      document.documentElement.style.setProperty('--accent', s.accent || '#a8714f');
+      document.documentElement.style.setProperty('--accent2', s.accent2 || '#e3bfb3');
       document.title = s.shopName;
     }
     try {
@@ -330,7 +330,7 @@
     }).join('') || emptyHTML(cfg.icon, 'Bo\'sh', 'Yangi qo\'shing')}`;
   }
 
-  const SWATCHES = ['#b83b5e', '#e8a0a8', '#9b3d6b', '#c48a6a', '#5f4b8b', '#ff3d7f', '#7b5cff', '#22d3ee', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#111827', '#a855f7'];
+  const SWATCHES = ['#a8714f', '#e3bfb3', '#c9a27e', '#d9a3a0', '#9d8fc0', '#8e9a82', '#b83b5e', '#ff3d7f', '#7b5cff', '#22d3ee', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#111827', '#a855f7'];
   function settingsHTML() {
     const s = D.settings;
     return `<div class="page-title"><h1>Sozlamalar</h1></div>
@@ -389,12 +389,12 @@
       <label class="switch">Do'konda ko'rinsin <input type="checkbox" name="active" ${it.active !== false ? 'checked' : ''}></label>`;
     } else if (col === 'categories') {
       body = `${field('name', 'Bo\'lim nomi *', it.name, 'text', 'required')}${field('emoji', 'Emoji', it.emoji || '🛍')}
-      <div class="field"><label>Rang</label><div class="swatches">${SWATCHES.map((c) => `<button type="button" class="${(it.color || '#b83b5e') === c ? 'on' : ''}" style="background:${c}" data-act="sw" data-k="color" data-c="${c}"></button>`).join('')}</div></div>
-      <input type="hidden" name="color" value="${h(it.color || '#b83b5e')}">`;
+      <div class="field"><label>Rang</label><div class="swatches">${SWATCHES.map((c) => `<button type="button" class="${(it.color || '#a8714f') === c ? 'on' : ''}" style="background:${c}" data-act="sw" data-k="color" data-c="${c}"></button>`).join('')}</div></div>
+      <input type="hidden" name="color" value="${h(it.color || '#a8714f')}">`;
     } else if (col === 'banners') {
       body = `${field('title', 'Sarlavha *', it.title, 'text', 'required')}${field('subtitle', 'Qo\'shimcha matn', it.subtitle)}${field('emoji', 'Emoji', it.emoji)}
-      <div class="row"><div class="field"><label>Rang 1</label><input name="from" type="color" value="${h(it.from || '#b83b5e')}" style="height:52px;padding:4px"></div>
-      <div class="field"><label>Rang 2</label><input name="to" type="color" value="${h(it.to || '#e8a0a8')}" style="height:52px;padding:4px"></div></div>
+      <div class="row"><div class="field"><label>Rang 1</label><input name="from" type="color" value="${h(it.from || '#a8714f')}" style="height:52px;padding:4px"></div>
+      <div class="field"><label>Rang 2</label><input name="to" type="color" value="${h(it.to || '#e3bfb3')}" style="height:52px;padding:4px"></div></div>
       <div class="field"><label>Fon rasmi (ixtiyoriy)</label><div class="img-picker" id="imgs"></div></div>
       ${actionPicker(it.action)}`;
     } else if (col === 'appButtons') {
@@ -530,7 +530,7 @@
     confetti();
   }
   function confetti() {
-    const colors = [getComputedStyle(document.documentElement).getPropertyValue('--accent'), getComputedStyle(document.documentElement).getPropertyValue('--accent2'), '#f3c9a8', '#ffffff'];
+    const colors = [getComputedStyle(document.documentElement).getPropertyValue('--accent'), getComputedStyle(document.documentElement).getPropertyValue('--accent2'), '#c3b8dd', '#f1d3b3'];
     for (let i = 0; i < 70; i++) {
       const c = document.createElement('i');
       Object.assign(c.style, { position: 'fixed', zIndex: 80, left: Math.random() * 100 + 'vw', top: '-12px', width: '8px', height: '14px', borderRadius: '2px', background: colors[i % 4], pointerEvents: 'none' });

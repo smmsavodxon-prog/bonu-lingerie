@@ -12,12 +12,12 @@ const uid = () => crypto.randomBytes(6).toString('hex');
 
 function seed() {
   const cats = [
-    { id: uid(), name: 'Lifchiklar', emoji: '🎀', color: '#b83b5e' },
-    { id: uid(), name: 'Trusiklar', emoji: '🌸', color: '#e07a8f' },
-    { id: uid(), name: 'To\'plamlar', emoji: '💝', color: '#9b3d6b' },
-    { id: uid(), name: 'Pijama va xalatlar', emoji: '🌙', color: '#7d6b9e' },
-    { id: uid(), name: 'Bodi va korsetlar', emoji: '✨', color: '#c48a6a' },
-    { id: uid(), name: 'Kolgotka va paypoqlar', emoji: '🧦', color: '#5f5a6e' },
+    { id: uid(), name: 'Lifchiklar', emoji: '🎀', color: '#d9a3a0' },
+    { id: uid(), name: 'Trusiklar', emoji: '🌸', color: '#c9a27e' },
+    { id: uid(), name: 'To\'plamlar', emoji: '💝', color: '#a8714f' },
+    { id: uid(), name: 'Pijama va xalatlar', emoji: '🌙', color: '#9d8fc0' },
+    { id: uid(), name: 'Bodi va korsetlar', emoji: '✨', color: '#d4b48c' },
+    { id: uid(), name: 'Kolgotka va paypoqlar', emoji: '🧦', color: '#8e9a82' },
   ];
   // Namuna rasmlar — admin paneldan haqiqiy rasmlarga almashtiriladi
   const ph = (n) => `/img/sample-${n}.svg`;
@@ -31,8 +31,8 @@ function seed() {
       shopName: 'Bonu Lingerie',
       tagline: 'Nafislik — har kuni siz bilan',
       currency: "so'm",
-      accent: '#b83b5e',
-      accent2: '#e8a0a8',
+      accent: '#a8714f',
+      accent2: '#e3bfb3',
       phone: '',
       welcomeText: '🌸 <b>Bonu Lingerie</b>ga xush kelibsiz!\n\nNafis ichki kiyimlar, pijamalar va sovg\'a to\'plamlari. Buyurtmalar yashirin qadoqda yetkaziladi.\n\nDo\'konni ochish uchun pastdagi tugmani bosing 👇',
       orderNote: 'Buyurtmangiz qabul qilindi! Tez orada operatorimiz siz bilan bog\'lanadi. Mahsulot yashirin qadoqda yetkaziladi. 💝',
@@ -54,9 +54,9 @@ function seed() {
       p('Kolgotka 40 den (2 dona)', 5, 49000, null, 'standart', 'Italiya', 12, 'Mat, cho\'zilmaydigan, chidamli.'),
     ],
     banners: [
-      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#b83b5e', to: '#e8a0a8', action: 'sort:new' },
-      { id: uid(), title: 'Chegirmalar', subtitle: '30% gacha arzon', emoji: '💝', from: '#9b3d6b', to: '#f0a07a', action: 'filter:sale' },
-      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningizga eng nafis sovg\'a', emoji: '🎁', from: '#5f4b8b', to: '#e8a0a8', action: 'filter:premium' },
+      { id: uid(), title: 'Yangi kolleksiya', subtitle: 'Nafis dantel va atlas', emoji: '🌸', from: '#a8714f', to: '#e3bfb3', action: 'sort:new' },
+      { id: uid(), title: 'Chegirmalar', subtitle: '30% gacha arzon', emoji: '💝', from: '#c98f86', to: '#f1d3b3', action: 'filter:sale' },
+      { id: uid(), title: 'Sovg\'a to\'plamlari', subtitle: 'Yaqiningizga eng nafis sovg\'a', emoji: '🎁', from: '#8f80b8', to: '#e6cfc4', action: 'filter:premium' },
     ],
     appButtons: [
       { id: uid(), label: 'Chegirmalar', emoji: '🔥', action: 'filter:sale' },
